@@ -1,13 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+} from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
+import Header from './general/header/Header.js';
+import Footer from './general/footer/Footer.js';
+import Search from './pokedex/Pokedex.js';
+import Home from './home/Home.js';
+import Pokemon from './pokemon/Pokemon.js';
+import Container from '@mui/material/Container';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+
+<Router>
+    <Header/>
+
+    <Container maxWidth="lg">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/pokedex" element={<Search />} />
+          <Route path="/pokedex/:id" element={<Pokemon />} />
+        </Routes>
+    </Container>
+
+    <Footer/>
+  </Router>
+
   </React.StrictMode>
 );
 
