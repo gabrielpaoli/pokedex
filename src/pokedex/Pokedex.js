@@ -15,9 +15,11 @@ const Search = (props) => {
 	const [qty, setQty] = useState(24);
 	const URL_POKEDEX = `https://pokeapi.co/api/v2/pokemon?limit=${LIMIT}`;
 	const URL_TYPES = 'https://pokeapi.co/api/v2/type';
-	const [query, setQuery] = useState({pokemonName: '', qty: qty, taggedPokemons: []});
+	const URL_GENERATIONS = 'https://pokeapi.co/api/v2/generation';
+	const [query, setQuery] = useState({pokemonName: '', qty: qty, taggedPokemons: [], generationPokemons: [], filteredPokemons: []});
 	const [searchData, setSearchData] = useState([]);
 	const [searchTypes, setSearchTypes] = useState([]);
+	const [searchGenerations, setSearchGenerations] = useState([]);
 	const pokedata = getPokemonList(searchData)
 
 	function getPokemonData(){
@@ -44,20 +46,37 @@ const Search = (props) => {
 		fetchPokemoTypes();
 	}
 
+	function getGenerationsData(){
+		let fetchPokemoGenerations = async () => {
+			const result = await axios(URL_GENERATIONS);
+			let data = result.data.results;
+			data.map(function(x) { 
+				x.checked = false; 
+				return x
+			});
+
+			setSearchGenerations(data);
+		};
+
+		fetchPokemoGenerations();
+	}
+
   useEffect(() => {
 
 		if(searchData.length === 0){getPokemonData()}
 		if(searchTypes.length === 0){getTypesData()}
+		if(searchGenerations.length === 0){getGenerationsData()}
 
 		updatePokemonsPerType();
-	}, [searchTypes]);
+		updatePokemonsPerGeneration();
+	}, [searchTypes, searchGenerations]);
 
 	function getPokemonList(searchData) {
 		let data = [];
 		let filterInstance = [];
 
-		if(query.taggedPokemons.length > 0){
-			filterInstance = query.taggedPokemons;
+		if(query.taggedPokemons.length > 0 || query.generationPokemons.length > 0){
+			filterInstance = query.filteredPokemons;
 		}else{
 			filterInstance = searchData;
 		}
@@ -66,6 +85,44 @@ const Search = (props) => {
 		data = data.slice(0, query.qty);
     
 		return data;
+	}
+
+
+	function updatePokemonsPerGeneration(){
+		let pokemons = [];
+
+		let fetchPokemonData = async () => {
+			for (let generation of searchGenerations) {      
+				if(generation.checked){
+					const result = await axios(generation.url);
+					pokemons = result.data.pokemon_species;
+				}
+    	}
+
+			let pokemonsFiltered = pokemons.filter((value, index, self) =>
+				index === self.findIndex((t) => (
+					t.place === value.place && t.name === value.name
+				))
+			)
+
+			pokemonsFiltered.sort((a, b) => {
+				return getPokemonId(a.url) - getPokemonId(b.url);
+			});
+
+			setQuery(query => ({
+				...query,
+				generationPokemons: pokemonsFiltered
+			}));
+
+			setQuery(query => ({
+				...query,
+				filteredPokemons: mixedPokemons
+			}));
+
+
+		};
+
+		fetchPokemonData();
 	}
 
 	function updatePokemonsPerType(){
@@ -92,10 +149,12 @@ const Search = (props) => {
 				return getPokemonId(a.url) - getPokemonId(b.url);
 			});
 
+
 			setQuery(query => ({
 				...query,
 				taggedPokemons: pokemonsFiltered
 			}));
+
 
 		};
 
@@ -129,7 +188,7 @@ const Search = (props) => {
 		}));
   };
 
-	const handleChange = (event) => {
+	const handleChangeQty = (event) => {
 		let newQty = event.target.value;
     setQty(newQty);
 		setQuery(query => ({
@@ -138,10 +197,39 @@ const Search = (props) => {
 		}));
   };
 
+	const handleChangeGeneration = (event) => {
+		let newGenerationName = event.target.value;
+		let newArr = [...searchGenerations];
+
+		searchGenerations.map(function(generation, i) { 
+			if(generation.checked){
+				newArr[i] = {...generation, checked: false};
+				setSearchGenerations(newArr);
+			}
+			if(generation.name === newGenerationName){
+				newArr[i] = {...generation, checked: true};
+				setSearchGenerations(newArr);
+			}
+		});
+  };
+
 	const clickType = (type, i) => {
 		let newArr = [...searchTypes];
 		newArr[i] = {...type, checked: !type.checked};
 		setSearchTypes(newArr);
+	}
+
+	function getGenerationSelected(){
+		let generation = 'generation-i';
+		if(searchGenerations.length > 0){
+			searchGenerations.map(function(x) { 
+				if(x.checked){
+					generation = x.name;
+				}
+			});
+		}
+
+		return generation;
 	}
 	
   return (
@@ -151,7 +239,7 @@ const Search = (props) => {
 			<div className="search">
 			<Grid container spacing={2}>
 
-				<Grid item xs={12} sm={8}>
+				<Grid item xs={12} sm={6}>
 					<Box sx={{ minWidth: 280 }}>
 						<TextField
 							id="outlined-basic"
@@ -164,8 +252,28 @@ const Search = (props) => {
 					</Box>
 				</Grid>
 
-				<Grid item xs={12} sm={4}>
-					<Box sx={{ minWidth: 280 }}>
+				<Grid item xs={12} sm={3}>
+					<Box sx={{ minWidth: 140 }}>
+						<FormControl fullWidth>
+							<InputLabel id="generation-select-label">Generation</InputLabel>
+							<Select
+								labelId="generation-select-label"
+								id="generation-select"
+								value={getGenerationSelected()}
+								label="Generation"
+								onChange={handleChangeGeneration}
+							>
+								{searchGenerations.map((generation, i) => (
+									<MenuItem key={generation.name} value={generation.name}>{generation.name}</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Box>
+				</Grid>
+
+
+				<Grid item xs={12} sm={3}>
+					<Box sx={{ minWidth: 140 }}>
 						<FormControl fullWidth>
 							<InputLabel id="qty-select-label">Show</InputLabel>
 							<Select
@@ -173,7 +281,7 @@ const Search = (props) => {
 								id="qty-select"
 								value={qty}
 								label="Age"
-								onChange={handleChange}
+								onChange={handleChangeQty}
 							>
 								<MenuItem value={12}>12</MenuItem>
 								<MenuItem value={24}>24</MenuItem>
@@ -186,8 +294,6 @@ const Search = (props) => {
 						</FormControl>
 					</Box>
 				</Grid>
-
-
 			</Grid>
 
 			<div className='searchCategories'>
