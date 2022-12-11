@@ -9,11 +9,11 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import pokemons from '../json/pokemons';
 
 const Search = (props) => {
 	const LIMIT = 100000;
 	const [qty, setQty] = useState(24);
-	const URL_POKEDEX = `https://pokeapi.co/api/v2/pokemon?limit=${LIMIT}`;
 	const URL_TYPES = 'https://pokeapi.co/api/v2/type';
 	const URL_GENERATIONS = 'https://pokeapi.co/api/v2/generation';
 	const [query, setQuery] = useState({pokemonName: '', qty: qty, taggedPokemons: [], generationPokemons: [], filteredPokemons: []});
@@ -23,12 +23,9 @@ const Search = (props) => {
 	const pokedata = getPokemonList(searchData)
 
 	function getPokemonData(){
-		let fetchPokemonData = async () => {
-			const result = await axios(URL_POKEDEX);
-			setSearchData(result.data.results);
-		};
-		fetchPokemonData();
+		setSearchData(pokemons);
 	}
+
 
 	function getTypesData(){
 		let fetchPokemoTypes = async () => {
@@ -81,6 +78,7 @@ const Search = (props) => {
 			filterInstance = searchData;
 		}
 
+
 		data = filterInstance.filter(o => Object.keys(o).some(k => o[k].toLowerCase().includes(query.pokemonName.toLowerCase())))
 		data = data.slice(0, query.qty);
     
@@ -114,9 +112,10 @@ const Search = (props) => {
 				generationPokemons: pokemonsFiltered
 			}));
 
+
 			setQuery(query => ({
 				...query,
-				filteredPokemons: mixedPokemons
+				//filteredPokemons: mixedPokemons
 			}));
 
 
@@ -129,12 +128,17 @@ const Search = (props) => {
 		let pokemons = [];
 
 		let fetchPokemonData = async () => {
+			let generation = searchGenerations.find(element => element.checked)
+			
 			for (let type of searchTypes) {      
 				if(type.checked){
-					const result = await axios(type.url);
-					let data = result.data.pokemon;
-					data.map((p) => {
-						pokemons.push(p.pokemon)
+					let pokeFound = searchData.filter(p => p.type === type.name);
+					if(generation){
+						pokeFound = pokeFound.filter(p => p.generation === generation.name)
+					}
+
+					pokeFound.map((p) => {
+						pokemons.push(p)
 					})
 				}
     	}
@@ -149,12 +153,15 @@ const Search = (props) => {
 				return getPokemonId(a.url) - getPokemonId(b.url);
 			});
 
-
 			setQuery(query => ({
 				...query,
 				taggedPokemons: pokemonsFiltered
 			}));
 
+			setQuery(query => ({
+				...query,
+				filteredPokemons: pokemonsFiltered
+			}));
 
 		};
 
