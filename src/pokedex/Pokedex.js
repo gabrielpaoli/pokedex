@@ -10,74 +10,31 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import pokemons from '../json/pokemons';
+import types from '../json/types';
+import generations from '../json/generations';
 
 const Search = (props) => {
 	const LIMIT = 100000;
 	const [qty, setQty] = useState(24);
-	const URL_TYPES = 'https://pokeapi.co/api/v2/type';
-	const URL_GENERATIONS = 'https://pokeapi.co/api/v2/generation';
-	const [query, setQuery] = useState({pokemonName: '', qty: qty, taggedPokemons: [], generationPokemons: [], filteredPokemons: []});
-	const [searchData, setSearchData] = useState([]);
-	const [searchTypes, setSearchTypes] = useState([]);
-	const [searchGenerations, setSearchGenerations] = useState([]);
+	const [query, setQuery] = useState({pokemonName: '', qty: qty, filteredPokemons: []});
+	const [searchData] = useState(pokemons);
+	const [searchTypes, setSearchTypes] = useState(types);
+	const [searchGenerations, setSearchGenerations] = useState(generations);
 	const pokedata = getPokemonList(searchData)
 
-	function getPokemonData(){
-		setSearchData(pokemons);
-	}
-
-
-	function getTypesData(){
-		let fetchPokemoTypes = async () => {
-			const result = await axios(URL_TYPES);
-			let data = result.data.results;
-			data.map(function(x) { 
-				x.checked = false; 
-				return x
-			});
-			data.splice(data.length -2, 2);
-
-			setSearchTypes(data);
-		};
-
-		fetchPokemoTypes();
-	}
-
-	function getGenerationsData(){
-		let fetchPokemoGenerations = async () => {
-			const result = await axios(URL_GENERATIONS);
-			let data = result.data.results;
-			data.map(function(x) { 
-				x.checked = false; 
-				return x
-			});
-
-			setSearchGenerations(data);
-		};
-
-		fetchPokemoGenerations();
-	}
-
   useEffect(() => {
-
-		if(searchData.length === 0){getPokemonData()}
-		if(searchTypes.length === 0){getTypesData()}
-		if(searchGenerations.length === 0){getGenerationsData()}
-
-		updatePokemonsPerType();
-		updatePokemonsPerGeneration();
+		updatePokemons();
 	}, [searchTypes, searchGenerations]);
 
 	function getPokemonList(searchData) {
 		let data = [];
 		let filterInstance = [];
 
-		if(query.taggedPokemons.length > 0 || query.generationPokemons.length > 0){
+		if(query.filteredPokemons.length > 0){
 			filterInstance = query.filteredPokemons;
 		}else{
 			filterInstance = searchData;
 		}
-
 
 		data = filterInstance.filter(o => Object.keys(o).some(k => o[k].toLowerCase().includes(query.pokemonName.toLowerCase())))
 		data = data.slice(0, query.qty);
@@ -85,87 +42,53 @@ const Search = (props) => {
 		return data;
 	}
 
-
-	function updatePokemonsPerGeneration(){
-		let pokemons = [];
-
-		let fetchPokemonData = async () => {
-			for (let generation of searchGenerations) {      
-				if(generation.checked){
-					const result = await axios(generation.url);
-					pokemons = result.data.pokemon_species;
-				}
-    	}
-
-			let pokemonsFiltered = pokemons.filter((value, index, self) =>
-				index === self.findIndex((t) => (
-					t.place === value.place && t.name === value.name
-				))
-			)
-
-			pokemonsFiltered.sort((a, b) => {
-				return getPokemonId(a.url) - getPokemonId(b.url);
-			});
-
-			setQuery(query => ({
-				...query,
-				generationPokemons: pokemonsFiltered
-			}));
-
-
-			setQuery(query => ({
-				...query,
-				//filteredPokemons: mixedPokemons
-			}));
-
-
-		};
-
-		fetchPokemonData();
+	function getSelectedTypeNames(types){
+		let typesArray = [];
+		for (let type of types) {      
+			typesArray.push(type.name);
+		}
+		return typesArray;
 	}
 
-	function updatePokemonsPerType(){
+	function updatePokemons(){
 		let pokemons = [];
+		let pokeFound = [];
 
-		let fetchPokemonData = async () => {
-			let generation = searchGenerations.find(element => element.checked)
-			
-			for (let type of searchTypes) {      
-				if(type.checked){
-					let pokeFound = searchData.filter(p => p.type === type.name);
-					if(generation){
-						pokeFound = pokeFound.filter(p => p.generation === generation.name)
-					}
+		let generation = searchGenerations.find(element => element.checked)
+		let types = searchTypes.filter(element => element.checked)
 
-					pokeFound.map((p) => {
-						pokemons.push(p)
-					})
-				}
-    	}
+		if(types.length > 0){
+			const typeArr = getSelectedTypeNames(types);
+			pokeFound = searchData.filter(p => typeArr.includes(p.type) || typeArr.includes(p.type2));
 
-			let pokemonsFiltered = pokemons.filter((value, index, self) =>
-				index === self.findIndex((t) => (
-					t.place === value.place && t.name === value.name
-				))
-			)
+			if(generation){
+				pokeFound = pokeFound.filter(p => p.generation === generation.name)
+			}
+		}else{
+			if(generation){
+				pokeFound = searchData.filter(p => p.generation === generation.name)
+			}
+		}
 
-			pokemonsFiltered.sort((a, b) => {
-				return getPokemonId(a.url) - getPokemonId(b.url);
-			});
+		pokeFound.map((p) => {
+			pokemons.push(p)
+		})
 
-			setQuery(query => ({
-				...query,
-				taggedPokemons: pokemonsFiltered
-			}));
+		let pokemonsFiltered = pokemons.filter((value, index, self) =>
+			index === self.findIndex((t) => (
+				t.place === value.place && t.name === value.name
+			))
+		)
 
-			setQuery(query => ({
-				...query,
-				filteredPokemons: pokemonsFiltered
-			}));
+		pokemonsFiltered.sort((a, b) => {
+			return getPokemonId(a.url) - getPokemonId(b.url);
+		});
 
-		};
+		setQuery(query => ({
+			...query,
+			filteredPokemons: pokemonsFiltered
+		}));
 
-		fetchPokemonData();
 	}
 	
 	function showMore(){
