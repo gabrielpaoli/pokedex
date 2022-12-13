@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from "@mui/material/Typography";
@@ -16,8 +15,8 @@ import generations from '../json/generations';
 const Search = (props) => {
 	const LIMIT = 100000;
 	const [qty, setQty] = useState(24);
-	const [query, setQuery] = useState({pokemonName: '', qty: qty, filteredPokemons: []});
 	const [searchData] = useState(pokemons);
+	const [query, setQuery] = useState({pokemonName: '', qty: qty, filteredPokemons: []});
 	const [searchTypes, setSearchTypes] = useState(types);
 	const [searchGenerations, setSearchGenerations] = useState(generations);
 	const pokedata = getPokemonList(searchData)
@@ -61,11 +60,11 @@ const Search = (props) => {
 			const typeArr = getSelectedTypeNames(types);
 			pokeFound = searchData.filter(p => typeArr.includes(p.type) || typeArr.includes(p.type2));
 
-			if(generation){
+			if(generation && generation.name !== 'all'){
 				pokeFound = pokeFound.filter(p => p.generation === generation.name)
 			}
 		}else{
-			if(generation){
+			if(generation && generation.name !== 'all'){
 				pokeFound = searchData.filter(p => p.generation === generation.name)
 			}
 		}
@@ -150,7 +149,7 @@ const Search = (props) => {
 	}
 
 	function getGenerationSelected(){
-		let generation = 'generation-i';
+		let generation;
 		if(searchGenerations.length > 0){
 			searchGenerations.map(function(x) { 
 				if(x.checked){
@@ -194,7 +193,7 @@ const Search = (props) => {
 								onChange={handleChangeGeneration}
 							>
 								{searchGenerations.map((generation, i) => (
-									<MenuItem key={generation.name} value={generation.name}>{generation.name}</MenuItem>
+									<MenuItem key={generation.name} value={generation.name}>{generation.parsedName}</MenuItem>
 								))}
 							</Select>
 						</FormControl>
@@ -217,9 +216,6 @@ const Search = (props) => {
 								<MenuItem value={24}>24</MenuItem>
 								<MenuItem value={36}>36</MenuItem>
 								<MenuItem value={72}>72</MenuItem>
-								<MenuItem value={144}>144</MenuItem>
-								<MenuItem value={288}>288</MenuItem>
-								<MenuItem value={LIMIT}>All</MenuItem>
 							</Select>
 						</FormControl>
 					</Box>
@@ -267,6 +263,30 @@ const Search = (props) => {
 							<img alt={pokemon.name} src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${getPokemonId(pokemon.url)}.png`} /> 
 							<Typography>{parsePokemonName(pokemon.name)}</Typography>
 							<Typography>#{getPokemonId(pokemon.url)}</Typography>
+
+							<Grid 
+								xs={12} lg={12} key={pokemon.type+"-"+i}
+								container
+								direction="row"
+								align="center"
+								justify="center"
+							>
+							
+							<Grid sx={{ pr: 0.2, pl: 0.2 }} item xs={12} lg={(pokemon.type2) ? 6 : 12}>
+								<Button fullWidth className={`typeTag background-color-${pokemon.type}`}>
+									{pokemon.type}
+								</Button>
+							</Grid>
+							
+							{pokemon.type2 &&
+								<Grid sx={{ pr: 0.2, pl: 0.2 }} item xs={12} lg={6}>
+										<Button fullWidth className={`typeTag background-color-${pokemon.type2}`}>
+											{pokemon.type2}
+										</Button>
+								</Grid>
+							}
+
+							</Grid>
 						</a>
 					</Grid>
 				))}

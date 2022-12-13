@@ -28,6 +28,11 @@ code {
   background: #cccccc;
 }
 
+.typeTag{
+  color: white !important;
+  font-size: 80% !important;
+}
+
 .containerPokemonCard img{
   width: 100%; 
 }
