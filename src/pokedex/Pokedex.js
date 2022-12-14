@@ -11,6 +11,7 @@ import Select from '@mui/material/Select';
 import pokemons from '../json/pokemons';
 import types from '../json/types';
 import generations from '../json/generations';
+import { Link } from "react-router-dom";
 
 const Search = (props) => {
 	const LIMIT = 100000;
@@ -259,13 +260,13 @@ const Search = (props) => {
 						justify="center"
 						align="center"
 					>
-						<a className="containerPokemonCard" href={'pokedex/' + getPokemonId(pokemon.url)}>
+						<Link to={'/pokedex/' + getPokemonId(pokemon.url)} className="containerPokemonCard">
 							<img alt={pokemon.name} src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${getPokemonId(pokemon.url)}.png`} /> 
 							<Typography>{parsePokemonName(pokemon.name)}</Typography>
 							<Typography>#{getPokemonId(pokemon.url)}</Typography>
 
 							<Grid 
-								xs={12} lg={12} key={pokemon.type+"-"+i}
+								key={pokemon.type+"-"+i}
 								container
 								direction="row"
 								align="center"
@@ -287,7 +288,7 @@ const Search = (props) => {
 							}
 
 							</Grid>
-						</a>
+						</Link>
 					</Grid>
 				))}
 
