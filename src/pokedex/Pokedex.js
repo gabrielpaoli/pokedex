@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import pokemons from '../json/pokemons';
 import types from '../json/types';
+import qtyList from '../json/qtyList';
 import generations from '../json/generations';
-import { Link } from "react-router-dom";
+import PokeCard from './PokeCard';
+import FormInput from '../search/FormInput';
+import FormSelect from '../search/FormSelect';
+import FormTypes from '../search/FormTypes';
 
 const Search = (props) => {
-	const LIMIT = 100000;
 	const [qty, setQty] = useState(24);
 	const [searchData] = useState(pokemons);
 	const [query, setQuery] = useState({pokemonName: '', qty: qty, filteredPokemons: []});
@@ -104,12 +101,6 @@ const Search = (props) => {
 		return chunks[6];
 	}
 
-	function parsePokemonName(name){
-		let nameParsed = name.charAt(0).toUpperCase() + name.slice(1);
-		nameParsed = nameParsed.replace('-', ' ')
-		return nameParsed;
-	}
-
 	const inputHandler = (e) => {
     let searchName = e.target.value.toLowerCase().replace(' ', '-');
 		setQuery(query => ({
@@ -164,140 +155,47 @@ const Search = (props) => {
 	
   return (
 		
-		<div>
-		
+		<div class="pokedex-search">
 			<div className="search">
-			<Grid container spacing={2}>
-
-				<Grid item xs={12} sm={6}>
-					<Box sx={{ minWidth: 280 }}>
-						<TextField
-							id="outlined-basic"
-							onChange={inputHandler}
-							variant="outlined"
-							fullWidth
-							label="Search"
-							placeholder="Enter at least 3 characters"
-						/>
-					</Box>
-				</Grid>
-
-				<Grid item xs={12} sm={3}>
-					<Box sx={{ minWidth: 140 }}>
-						<FormControl fullWidth>
-							<InputLabel id="generation-select-label">Generation</InputLabel>
-							<Select
-								labelId="generation-select-label"
-								id="generation-select"
-								value={getGenerationSelected()}
-								label="Generation"
-								onChange={handleChangeGeneration}
-							>
-								{searchGenerations.map((generation, i) => (
-									<MenuItem key={generation.name} value={generation.name}>{generation.parsedName}</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-					</Box>
-				</Grid>
-
-
-				<Grid item xs={12} sm={3}>
-					<Box sx={{ minWidth: 140 }}>
-						<FormControl fullWidth>
-							<InputLabel id="qty-select-label">Show</InputLabel>
-							<Select
-								labelId="qty-select-label"
-								id="qty-select"
-								value={qty}
-								label="Age"
-								onChange={handleChangeQty}
-							>
-								<MenuItem value={12}>12</MenuItem>
-								<MenuItem value={24}>24</MenuItem>
-								<MenuItem value={36}>36</MenuItem>
-								<MenuItem value={72}>72</MenuItem>
-							</Select>
-						</FormControl>
-					</Box>
-				</Grid>
-			</Grid>
-
-			<div className='searchCategories'>
 				<Grid container spacing={2}>
 
-					{searchTypes.map((type, i) => (
-						<Grid item xs={4} lg={1} key={type+"-"+i}>
-							<Button className={`background-color-${type.name}`} fullWidth
-								sx={{ 
-									color: 'white', 
-									className: 'background-color-' + type.name,
-									border: type.checked ? '2px dashed black' : '2px solid transparent'
-								}}
-									onClick={ () => clickType(type, i) }
-							>
-								{type.name}
-							</Button>
-						</Grid>
-					))
-					}
+					<Grid item xs={12} sm={6}>
+						<Box sx={{ minWidth: 280 }}>
+							<FormInput  
+								inputHandler={inputHandler}
+							/>
+						</Box>
+					</Grid>
 
+					<Grid item xs={12} sm={3}>
+						<Box sx={{ minWidth: 140 }}>
+							<FormSelect label="Generation" id="generation" handle={handleChangeGeneration} value={getGenerationSelected()} menuItemIterator={searchGenerations} />
+						</Box>
+					</Grid>
+
+					<Grid item xs={12} sm={3}>
+						<Box sx={{ minWidth: 140 }}>
+							<FormSelect label="Qty" id="qty" handle={handleChangeQty} value={qty} menuItemIterator={qtyList} />
+						</Box>
+					</Grid>
 				</Grid>
-			</div>
 
+				<div className='searchCategories'>
+					<FormTypes searchTypes={searchTypes} clickType={clickType} />
+				</div>
 
       </div>
 
 			<Grid container>
 				{pokedata.map((pokemon, i) => (
-					<Grid 
-						item xs={12} sm={4} md={2} 
-						className="pokemon-block" 
-						key={i}
-						container
-						direction="row"
-						alignItems="flex-end"
-						justify="center"
-						align="center"
-					>
-						<Link to={'/pokedex/' + getPokemonId(pokemon.url)} className="containerPokemonCard">
-							<img alt={pokemon.name} src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${getPokemonId(pokemon.url)}.png`} /> 
-							<Typography>{parsePokemonName(pokemon.name)}</Typography>
-							<Typography>#{getPokemonId(pokemon.url)}</Typography>
-
-							<Grid 
-								key={pokemon.type+"-"+i}
-								container
-								direction="row"
-								align="center"
-								justify="center"
-							>
-							
-							<Grid sx={{ pr: 0.2, pl: 0.2 }} item xs={12} lg={(pokemon.type2) ? 6 : 12}>
-								<Button fullWidth className={`typeTag background-color-${pokemon.type}`}>
-									{pokemon.type}
-								</Button>
-							</Grid>
-							
-							{pokemon.type2 &&
-								<Grid sx={{ pr: 0.2, pl: 0.2 }} item xs={12} lg={6}>
-										<Button fullWidth className={`typeTag background-color-${pokemon.type2}`}>
-											{pokemon.type2}
-										</Button>
-								</Grid>
-							}
-
-							</Grid>
-						</Link>
+					<Grid item xs={12} sm={4} md={2} className="pokemon-block"  key={i} container direction="row" alignItems="flex-end" justify="center" align="center">
+						<PokeCard pokemon={pokemon} pokemonId={getPokemonId(pokemon.url)} i={i} />
 					</Grid>
 				))}
-
 			</Grid>
 
 			{pokedata.length >= query.qty &&
-				<Button className="showMore" onClick={showMore} fullWidth>
-					Show more
-				</Button> 
+				<Button className="showMore" onClick={showMore} fullWidth>Show more</Button> 
 			}
 
 		</div>
