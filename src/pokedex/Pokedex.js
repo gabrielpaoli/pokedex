@@ -155,7 +155,7 @@ const Search = (props) => {
 	
   return (
 		
-		<div class="pokedex-search">
+		<div className="pokedex-search">
 			<div className="search">
 				<Grid container spacing={2}>
 
