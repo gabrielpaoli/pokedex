@@ -1,30 +1,15 @@
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
+import TypeBadge from '../pokemon/TypeBadge';
+import { useLanguage } from '../i18n/Language';
 
-
-const FormTypes = (props) => {
-
-    return (
-			<Grid container spacing={2}>
-				{props.searchTypes.map((type, i) => (
-					<Grid item xs={4} lg={1} key={type+"-"+i}>
-						<Button className={`background-color-${type.name}`} fullWidth
-							sx={{ 
-								color: 'white', 
-								className: 'background-color-' + type.name,
-								border: type.checked ? '2px dashed black' : '2px solid transparent'
-							}}
-								onClick={ () => props.clickType(type, i) }
-						>
-							{type.name}
-						</Button>
-					</Grid>
-				))
-				}
-
-			</Grid>
-	  );
-
+const FormTypes = ({ searchTypes, clickType }) => {
+  const { t } = useLanguage();
+  return (
+    <div className="pokemon-type-filters" role="group" aria-label={t('type')}>
+      {searchTypes.map((type, index) => (
+        <TypeBadge key={type.name} type={type.name} selected={type.checked} onClick={() => clickType(type, index)} />
+      ))}
+    </div>
+  );
 };
-	
+
 export default FormTypes;

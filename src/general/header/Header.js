@@ -1,91 +1,37 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import {
-  Link,
-} from "react-router-dom";
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import CatchingPokemon from '@mui/icons-material/CatchingPokemon';
+import { useLanguage } from '../../i18n/Language';
+import './Header.css';
 
 function Header() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+  const { language, setLanguage, t } = useLanguage();
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-         
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-                <MenuItem>
-                  <Link to="/">Home</Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link to="/pokedex">Pokedex</Link>
-                </MenuItem>
-            </Menu>
-          </Box>
-         
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Button
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-              <Link to="/">Home</Link>
-            </Button>
-            <Button
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-              <Link to="/pokedex">Pokedex</Link>
-            </Button>
-          </Box>
-
-
-        </Toolbar>
-      </Container>
-    </AppBar>
+    <header className="site-header">
+      <div className="site-header-inner">
+        <Link to="/pokedex" className="site-brand" aria-label={t('pokedex')}>
+          <span className="site-brand-icon"><CatchingPokemon aria-hidden="true" /></span>
+          <span>Pokedex<span className="site-brand-dot">.</span></span>
+        </Link>
+        <nav className="site-navigation" aria-label={t('navigation')}>
+          <NavLink to="/" end>{t('home')}</NavLink>
+          <NavLink to="/pokedex">{t('pokedex')}</NavLink>
+        </nav>
+        <div className="site-language" role="group" aria-label={t('language')}>
+          <span className="site-language-label">{t('language')}</span>
+          <div className="site-language-options">
+            <button type="button" lang="es" aria-label="Español" aria-pressed={language === 'es'} onClick={() => setLanguage('es')}>
+              <span className="language-short">ES</span><span className="language-full">Español</span>
+            </button>
+            <button type="button" lang="en" aria-label="English" aria-pressed={language === 'en'} onClick={() => setLanguage('en')}>
+              <span className="language-short">EN</span><span className="language-full">English</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
   );
 }
+
 export default Header;

@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useLanguage } from '../i18n/Language';
 
 const Home = (props) => {
+  const { t } = useLanguage();
   return (
     <div>
-        HOME
+        <h1>{t('welcome')}</h1>
+        <p>{t('intro')}</p>
+        <Link to="/pokedex">{t('pokedex')}</Link>
     </div>
       
   );

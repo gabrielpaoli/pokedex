@@ -5,7 +5,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
 } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
 import Header from './general/header/Header.js';
@@ -14,12 +13,14 @@ import Search from './pokedex/Pokedex.js';
 import Home from './home/Home.js';
 import Pokemon from './pokemon/Pokemon.js';
 import Container from '@mui/material/Container';
+import { LanguageProvider } from './i18n/Language';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
 
+<LanguageProvider>
 <Router>
     <Header/>
 
@@ -33,6 +34,7 @@ root.render(
 
     <Footer/>
   </Router>
+  </LanguageProvider>
 
   </React.StrictMode>
 );

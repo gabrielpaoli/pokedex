@@ -1,0 +1,57 @@
+.pokemon-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.pokemon-type-filter {
+  min-height: 38px;
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 3px;
+}
+
+.pokemon-type-filter:hover {
+  box-shadow: 0 3px 8px #23395a25;
+}
+
+.pokemon-type-filter[aria-pressed="true"] {
+  outline-color: #334b75;
+  box-shadow: 0 3px 8px #23395a20;
+}
+
+.pokemon-type-filter:focus-visible {
+  outline: 3px solid #6a8ed5;
+  outline-offset: 3px;
+}
+
+.pokemon-type-filters,
+.pokemon-card-types {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.pokemon-type-filters {
+  padding: 8px 4px;
+}
+
+.pokemon-card-types {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 6px;
+  margin-top: 10px;
+  min-height: 70px;
+}

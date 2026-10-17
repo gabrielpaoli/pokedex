@@ -2,6 +2,37 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Pokemon details
+
+The header language selector switches the entire interface between Spanish and
+English, including navigation, search filters, type labels and Pokemon details.
+The initial language follows the browser preference; the selection is saved locally.
+The header uses a Spanish/English segmented control and highlights the current route.
+Type badges share icons, colors and styling across detail pages, search results and
+search filters. Filter badges are toggle buttons with a selected outline.
+The search Show more button adds the quantity currently selected in the form
+and is hidden when no additional matching Pokemon remain.
+API descriptions use the selected language and show an explicit unavailable message
+when PokeAPI has no translation, rather than mixing languages.
+
+Open `/pokedex/:id` using a Pokemon ID or name to view its artwork, types,
+localized species description, physical data,
+abilities, base stats and EV yields, sprites, varieties, moves and game appearances.
+Move descriptions and effects, power, accuracy, PP, type and damage category load
+when the moves section is opened, 12 moves at a time with a Show more button.
+Ability names and descriptions also follow the selected language when available.
+Moves use type and damage-category icons rather than attack artwork (not supplied
+by PokeAPI). Game appearances are edition cards with decorative cartridge art and
+the Pokemon's version-specific sprite from the API's `sprites.versions`, when
+available. These are not official game covers; unavailable or failed sprite images
+are explicitly labeled and replaced by a controller icon.
+The evolution tree runs left to right with arrows and retains alternative branches.
+It includes API-provided evolution conditions (without game edition labels) and scrolls horizontally on small screens;
+each evolution and variety links to its own detail page. Species without a matching
+Pokemon name use their default variety for evolution links and artwork.
+Data is fetched from PokéAPI and requires an internet connection. Loading, missing
+Pokemon and request errors are shown on the page with a retry option for errors.
+
 ## Available Scripts
 
 In the project directory, you can run:

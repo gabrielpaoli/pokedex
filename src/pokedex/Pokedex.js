@@ -10,20 +10,24 @@ import PokeCard from './PokeCard';
 import FormInput from '../search/FormInput';
 import FormSelect from '../search/FormSelect';
 import FormTypes from '../search/FormTypes';
+import { useLanguage } from '../i18n/Language';
+import './Pokedex.css';
 
 const Search = (props) => {
+	const { t } = useLanguage();
 	const [qty, setQty] = useState(24);
 	const [searchData] = useState(pokemons);
 	const [query, setQuery] = useState({pokemonName: '', qty: qty, filteredPokemons: []});
 	const [searchTypes, setSearchTypes] = useState(types);
 	const [searchGenerations, setSearchGenerations] = useState(generations);
 	const pokedata = getPokemonList(searchData)
+	const hasMore = getPokemonList(searchData, query.qty + 1).length > pokedata.length;
 
   useEffect(() => {
 		updatePokemons();
 	}, [searchTypes, searchGenerations]);
 
-	function getPokemonList(searchData) {
+	function getPokemonList(searchData, limit = query.qty) {
 		let data = [];
 		let filterInstance = [];
 
@@ -34,7 +38,7 @@ const Search = (props) => {
 		}
 
 		data = filterInstance.filter(o => Object.keys(o).some(k => o[k].toLowerCase().includes(query.pokemonName.toLowerCase())))
-		data = data.slice(0, query.qty);
+		data = data.slice(0, limit);
     
 		return data;
 	}
@@ -89,10 +93,9 @@ const Search = (props) => {
 	}
 	
 	function showMore(){
-		let newQty = query.qty + qty;
 		setQuery(query => ({
 			...query,
-			qty: newQty
+			qty: query.qty + qty
 		}));
 	}
 
@@ -110,7 +113,7 @@ const Search = (props) => {
   };
 
 	const handleChangeQty = (event) => {
-		let newQty = event.target.value;
+		let newQty = Number(event.target.value);
     setQty(newQty);
 		setQuery(query => ({
 			...query,
@@ -169,13 +172,13 @@ const Search = (props) => {
 
 					<Grid item xs={12} sm={3}>
 						<Box sx={{ minWidth: 140 }}>
-							<FormSelect label="Generation" id="generation" handle={handleChangeGeneration} value={getGenerationSelected()} menuItemIterator={searchGenerations} />
+							<FormSelect label={t('generation')} id="generation" handle={handleChangeGeneration} value={getGenerationSelected()} menuItemIterator={searchGenerations} />
 						</Box>
 					</Grid>
 
 					<Grid item xs={12} sm={3}>
 						<Box sx={{ minWidth: 140 }}>
-							<FormSelect label="Qty" id="qty" handle={handleChangeQty} value={qty} menuItemIterator={qtyList} />
+							<FormSelect label={t('quantity')} id="qty" handle={handleChangeQty} value={qty} menuItemIterator={qtyList} />
 						</Box>
 					</Grid>
 				</Grid>
@@ -188,14 +191,19 @@ const Search = (props) => {
 
 			<Grid container>
 				{pokedata.map((pokemon, i) => (
-					<Grid item xs={12} sm={4} md={2} className="pokemon-block"  key={i} container direction="row" alignItems="flex-end" justify="center" align="center">
+					<Grid item xs={12} sm={4} md={2} className="pokemon-block" key={i} container direction="row" alignItems="stretch" justifyContent="center">
 						<PokeCard pokemon={pokemon} pokemonId={getPokemonId(pokemon.url)} i={i} />
 					</Grid>
 				))}
 			</Grid>
 
-			{pokedata.length >= query.qty &&
-				<Button className="showMore" onClick={showMore} fullWidth>Show more</Button> 
+			{hasMore &&
+				<div className="pokedex-load-more">
+					<Button className="showMore" onClick={showMore} variant="contained" disableElevation>
+						<span>{t('showMore')}</span>
+						<span className="showMore-count">+{qty}</span>
+					</Button>
+				</div>
 			}
 
 		</div>
