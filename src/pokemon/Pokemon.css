@@ -368,6 +368,55 @@
   margin: 0 0 20px;
 }
 
+.pokemon-tcg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+  gap: 24px 18px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+}
+
+.pokemon-tcg-card {
+  min-width: 0;
+}
+
+.pokemon-tcg-card a {
+  display: block;
+  border-radius: 10px;
+}
+
+.pokemon-tcg-card img,
+.pokemon-tcg-placeholder {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 245 / 337;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #f5f7fb;
+}
+
+.pokemon-tcg-placeholder {
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  color: var(--detail-muted);
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.pokemon-tcg-card h3 {
+  margin: 12px 0 4px;
+  font-size: 0.95rem;
+}
+
+.pokemon-tcg-card a > span {
+  color: var(--detail-muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
 .pokemon-resource {
   padding: 18px;
   border: 1px solid var(--detail-border);

@@ -6,12 +6,17 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 The header language selector switches the entire interface between Spanish and
 English, including navigation, search filters, type labels and Pokemon details.
+Interface text is displayed in uppercase through CSS, without changing source
+data, translations or search values. Text embedded in images remains unchanged.
 The initial language follows the browser preference; the selection is saved locally.
 The header uses a Spanish/English segmented control and highlights the current route.
 Type badges share icons, colors and styling across detail pages, search results and
 search filters. Filter badges are toggle buttons with a selected outline.
 The search Show more button adds the quantity currently selected in the form
 and is hidden when no additional matching Pokemon remain.
+The Pokedex displays five Pokemon per row on desktop, retaining three on tablet
+and one on small screens. Quantity options are 25, 50 and 100, with 25 selected
+initially.
 API descriptions use the selected language and show an explicit unavailable message
 when PokeAPI has no translation, rather than mixing languages.
 
@@ -32,6 +37,42 @@ each evolution and variety links to its own detail page. Species without a match
 Pokemon name use their default variety for evolution links and artwork.
 Data is fetched from PokéAPI and requires an internet connection. Loading, missing
 Pokemon and request errors are shown on the page with a retry option for errors.
+
+### Trading cards
+
+The header's Cards link opens `/cards`, a catalogue powered by TCGdex that displays
+cards immediately. Name searches update after a 300 ms typing delay, without a
+submit button. Type and set filters load from TCGdex and combine with the name
+search. Quantity options are 25, 50 and 100 (default 25); Show more adds that
+quantity. The grid displays five cards per desktop row, three on tablet and one
+on small screens. Query, filters and quantity are saved in the URL. Card details
+link back to the same search, including an unfiltered catalogue.
+Results include loading, empty, error and retry states. Filter failures have a
+separate retry and do not block cards. Switching language repeats the search;
+the localized type filter resets while the set and quantity remain selected.
+
+Pokemon details also include a [TCGdex](https://tcgdex.dev/) gallery. Cards are
+matched by the species' National Pokedex number, not by name or form ID, so forms
+share their species' cards. The gallery requests card summaries in the selected
+Spanish/English language and displays 12 at a time with Show more. Images load
+lazily; selecting any card (including cards without images) opens its detail page
+at `/cards/:id`. Details are fetched from TCGdex in the selected language and show
+the large image, set, number, rarity, illustrator, Pokemon data, abilities, attacks
+and energy costs, weaknesses, resistances, print variants and format legality when
+available. The page links back to the source species and associated Pokemon.
+The detail layout places the card image beside a game-style information sheet,
+with circular energy icons for types, attack costs, weaknesses, resistances and
+retreat. Icons are decorative UI representations, not official TCG energy assets,
+and include accessible type labels. Additional metadata, variants and format
+legality remain available in the general-information disclosure.
+The full-size image remains available through a separate link.
+Direct card URLs work without visiting a Pokemon first. Missing translations,
+request failures and unavailable images are explicitly indicated; failed requests
+can be retried and are cancelled on navigation or language changes.
+TCGdex coverage varies by language; no cards, missing images, and request failures
+are explicitly indicated, with an independent retry for failed card requests.
+Card requests are cancelled when navigating away or switching language, and do not
+block the rest of the Pokemon details. An internet connection is required.
 
 ## Available Scripts
 

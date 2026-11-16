@@ -5,6 +5,7 @@ import { formatName, localized, useLanguage } from '../i18n/Language';
 import { Moves, ResourceDetails } from './ResourceDetails';
 import TypeBadge from './TypeBadge';
 import GameAppearances from './GameAppearances';
+import PokemonCards from './PokemonCards';
 import './Pokemon.css';
 
 const resourceId = (url) => url.split('/').filter(Boolean).pop();
@@ -224,6 +225,7 @@ const Pokemon = () => {
           {species.varieties.map(({ pokemon: variety }) => <Link key={variety.name} to={`/pokedex/${resourceId(variety.url)}`}>{formatName(variety.name)}</Link>)}
         </div>
       </section>
+      <PokemonCards speciesId={resourceId(pokemon.species.url)} />
       <Moves key={pokemon.id} moves={pokemon.moves} />
       <GameAppearances key={pokemon.id} games={pokemon.game_indices} sprites={pokemon.sprites} pokemonName={name} />
     </article>

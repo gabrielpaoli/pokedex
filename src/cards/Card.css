@@ -1,0 +1,384 @@
+.card-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: clamp(28px, 6vw, 80px);
+  align-items: start;
+}
+
+.card-search-form {
+  margin-bottom: 24px;
+}
+
+.card-search-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.card-search-form > div {
+  display: flex;
+  gap: 12px;
+}
+
+.card-search-form input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid #d6e0f3;
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+  color: var(--detail-ink);
+}
+
+.card-search-form input:focus-visible {
+  outline: 3px solid #6a8ed5;
+  outline-offset: 3px;
+}
+
+.card-search-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(100px, 1fr);
+  gap: 20px;
+}
+
+.card-search-form.card-search-filters > div {
+  display: block;
+  min-width: 0;
+}
+
+.card-search-filters input,
+.card-search-filters select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #d6e0f3;
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+  color: var(--detail-ink);
+  background: #fff;
+}
+
+.card-search-filters select:focus-visible {
+  outline: 3px solid #6a8ed5;
+  outline-offset: 3px;
+}
+
+.card-search-page .pokemon-tcg-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.card-load-more {
+  display: flex;
+  justify-content: center;
+}
+
+.card-load-more span {
+  margin-left: 12px;
+}
+
+@media (max-width: 899px) {
+  .card-search-page .pokemon-tcg-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .card-search-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 599px) {
+  .card-search-page .pokemon-tcg-grid,
+  .card-search-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.card-artwork {
+  text-align: center;
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.card-artwork > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.card-artwork a {
+  color: #4465ae;
+}
+
+.card-detail .pokemon-facts dd,
+.card-sheet-heading h1 {
+  overflow-wrap: anywhere;
+}
+
+.card-effect {
+  white-space: pre-line;
+}
+
+.card-detail .pokemon-category + .card-effect {
+  margin-top: 12px;
+}
+
+.card-detail {
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card-sheet {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid var(--detail-border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.card-sheet-heading {
+  background: #718097;
+  color: #fff;
+  padding: 22px 24px;
+}
+
+.card-sheet-heading h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: -0.035em;
+}
+
+.card-sheet-id {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 6px;
+  opacity: 0.85;
+}
+
+.card-sheet-subheading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 24px;
+  background: #f0f3f7;
+}
+
+.card-hit-points,
+.card-energy-cost,
+.card-matchup {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.card-hit-points > span > strong {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.card-energy {
+  --energy-color: #c5cbd2;
+  display: inline-flex;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid #0003;
+  background: radial-gradient(circle at 35% 25%, #ffffffa0, transparent 65%), var(--energy-color);
+  color: #172333;
+  box-shadow: inset 0 0 0 2px #ffffff60, 0 1px 2px #0002;
+}
+
+.card-energy svg {
+  font-size: 18px;
+}
+
+.card-energy-grass { --energy-color: #80c54a; }
+.card-energy-fire { --energy-color: #f57948; }
+.card-energy-water { --energy-color: #65b8ed; }
+.card-energy-electric { --energy-color: #f4d54a; }
+.card-energy-psychic { --energy-color: #bb8bd4; }
+.card-energy-fighting { --energy-color: #cc976d; }
+.card-energy-dark { --energy-color: #526d7b; color: #fff; }
+.card-energy-steel { --energy-color: #a9b8bc; }
+.card-energy-fairy { --energy-color: #eea9cf; }
+.card-energy-dragon { --energy-color: #bfa24c; }
+.card-energy-colorless { --energy-color: #ede9e2; }
+
+.card-stage {
+  padding: 0 24px;
+  font-size: 0.8rem;
+  color: var(--detail-muted);
+}
+
+.card-sheet-section {
+  padding: 20px 24px 0;
+}
+
+.card-sheet-section > h2 {
+  margin: 0 0 18px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--detail-muted);
+}
+
+.card-attacks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-attack,
+.card-ability {
+  padding: 12px 0 24px;
+}
+
+.card-attack + .card-attack {
+  border-top: 1px solid var(--detail-border);
+  padding-top: 24px;
+}
+
+.card-attack-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.card-attack-heading h3,
+.card-ability h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.card-attack-damage {
+  margin-left: auto;
+  font-size: 1.5rem;
+}
+
+.card-attack .card-effect,
+.card-ability .card-effect,
+.card-flavor {
+  color: var(--detail-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin: 14px 0 0;
+}
+
+.card-flavor {
+  padding: 0 24px 24px;
+}
+
+.card-battle-panel {
+  margin: 12px 16px 0;
+  padding: 22px 16px;
+  background: #f0f3f7;
+  border-radius: 12px;
+}
+
+.card-battle-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+
+.card-battle-facts dt {
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.card-battle-facts dd {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.card-matchup {
+  font-size: 1.25rem;
+  margin: 0 8px 6px 0;
+}
+
+.card-set-summary {
+  border-top: 1px solid #dce3ec;
+  margin-top: 24px;
+  padding-top: 20px;
+}
+
+.card-set-summary strong {
+  color: #4465ae;
+}
+
+.card-set-summary p {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+}
+
+.card-illustrator {
+  margin: 24px;
+  font-size: 0.85rem;
+  color: var(--detail-muted);
+}
+
+.card-extra-details {
+  margin: 16px;
+  padding: 16px;
+  box-shadow: none;
+}
+
+.card-detail .card-extra-details > summary {
+  font-size: 1rem;
+}
+
+.card-actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.card-artwork .card-action {
+  display: block;
+  padding: 14px 18px;
+  background: #ee712d;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.card-artwork .card-action:hover {
+  background: #d95d1a;
+}
+
+@media (max-width: 700px) {
+  .card-overview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card-artwork {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .card-sheet-heading,
+  .card-sheet-subheading,
+  .card-sheet-section {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .card-battle-facts {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+}

@@ -15,7 +15,7 @@ import './Pokedex.css';
 
 const Search = (props) => {
 	const { t } = useLanguage();
-	const [qty, setQty] = useState(24);
+	const [qty, setQty] = useState(25);
 	const [searchData] = useState(pokemons);
 	const [query, setQuery] = useState({pokemonName: '', qty: qty, filteredPokemons: []});
 	const [searchTypes, setSearchTypes] = useState(types);
@@ -189,13 +189,13 @@ const Search = (props) => {
 
       </div>
 
-			<Grid container>
+			<div className="pokedex-results">
 				{pokedata.map((pokemon, i) => (
-					<Grid item xs={12} sm={4} md={2} className="pokemon-block" key={i} container direction="row" alignItems="stretch" justifyContent="center">
+					<div className="pokemon-block" key={i}>
 						<PokeCard pokemon={pokemon} pokemonId={getPokemonId(pokemon.url)} i={i} />
-					</Grid>
+					</div>
 				))}
-			</Grid>
+			</div>
 
 			{hasMore &&
 				<div className="pokedex-load-more">

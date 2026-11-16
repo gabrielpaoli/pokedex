@@ -17,6 +17,7 @@ function Header() {
         <nav className="site-navigation" aria-label={t('navigation')}>
           <NavLink to="/" end>{t('home')}</NavLink>
           <NavLink to="/pokedex">{t('pokedex')}</NavLink>
+          <NavLink to="/cards">{t('cardsNav')}</NavLink>
         </nav>
         <div className="site-language" role="group" aria-label={t('language')}>
           <span className="site-language-label">{t('language')}</span>

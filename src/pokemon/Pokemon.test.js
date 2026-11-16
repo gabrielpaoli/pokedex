@@ -56,6 +56,7 @@ function mockApi(overrides = {}) {
     [`${api}/pokemon/1`]: pokemon,
     [speciesUrl]: species,
     [chainUrl]: { chain: node('bulbasaur', speciesUrl) },
+    'https://api.tcgdex.net/v2/es/cards': [],
     ...overrides,
   };
   axios.mockImplementation((url) => {
@@ -179,4 +180,20 @@ test('aborts requests when the detail page is unmounted', async () => {
   const signal = axios.mock.calls[0][1].signal;
   unmount();
   await waitFor(() => expect(signal.aborted).toBe(true));
+});
+
+test('loads trading cards by species number rather than the alternate form ID', async () => {
+  mockApi({
+    [`${api}/pokemon/1`]: { ...pokemon, id: 10001, name: 'bulbasaur-form', is_default: false },
+    'https://api.tcgdex.net/v2/es/cards': [
+      { id: 'base1-44', name: 'Bulbasaur', image: 'https://assets.tcgdex.net/es/base/base1/44' },
+    ],
+  });
+  renderPokemon();
+  expect(await screen.findByRole('link', { name: /Ver detalles de la carta.*Bulbasaur/ })).toHaveAttribute(
+    'href', '/cards/base1-44'
+  );
+  expect(axios).toHaveBeenCalledWith('https://api.tcgdex.net/v2/es/cards', expect.objectContaining({
+    params: { dexId: 'eq:1' },
+  }));
 });

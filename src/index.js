@@ -12,6 +12,8 @@ import Footer from './general/footer/Footer.js';
 import Search from './pokedex/Pokedex.js';
 import Home from './home/Home.js';
 import Pokemon from './pokemon/Pokemon.js';
+import Card from './cards/Card.js';
+import Cards from './cards/Cards.js';
 import Container from '@mui/material/Container';
 import { LanguageProvider } from './i18n/Language';
 
@@ -29,6 +31,8 @@ root.render(
           <Route path="/" element={<Home />} />
           <Route path="/pokedex" element={<Search />} />
           <Route path="/pokedex/:id" element={<Pokemon />} />
+          <Route path="/cards/:id" element={<Card />} />
+          <Route path="/cards" element={<Cards />} />
         </Routes>
     </Container>
 
